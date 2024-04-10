@@ -28,6 +28,7 @@
       "react-app/jest"
     ]
   },
+  "homepage": "https://pierd.github.io/rock-paper-scissors",
   "browserslist": {
     "production": [
       ">0.2%",
