@@ -1,25 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Contender, duel } from './Contender';
+import contenders from './contenders';
 
 function App() {
+  var contendersList: { name: string, contender: Contender<any> }[] = Object.values(contenders);
+  contendersList.sort((a, b) => a.name.localeCompare(b.name));
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          {contendersList.map(contender => 
+            <th>{contender.name}</th>
+          )}
+        </tr>
+      </thead>
+      <tbody>
+        {contendersList.map(contenderA =>
+          <tr>
+            <td>{contenderA.name}</td>
+            {contendersList.map(contenderB =>
+              <td>{JSON.stringify(duel(contenderA.contender, contenderB.contender, 1000))}</td>
+            )}
+          </tr>
+        )}
+      </tbody>
+    </table>
   );
 }
 
