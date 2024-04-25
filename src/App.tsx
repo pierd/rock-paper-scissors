@@ -1,33 +1,24 @@
-import React from 'react';
-import './App.css';
-import { Contender, duel } from './Contender';
-import contenders from './contenders';
+import React from "react";
+import "./App.css";
+import contenders from "./contenders";
+import { Tournament } from "./Tournament";
+import { CustomContenders } from "./CustomContenders";
 
-function App() {
-  var contendersList: { name: string, contender: Contender<any> }[] = Object.values(contenders);
-  contendersList.sort((a, b) => a.name.localeCompare(b.name));
+type Page = "tournament" | "contenders";
+
+export default function App() {
+  const [page, setPage] = React.useState<Page>("tournament");
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>&nbsp;</th>
-          {contendersList.map(contender => 
-            <th>{contender.name}</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {contendersList.map(contenderA =>
-          <tr>
-            <td>{contenderA.name}</td>
-            {contendersList.map(contenderB =>
-              <td>{JSON.stringify(duel(contenderA.contender, contenderB.contender, 1000))}</td>
-            )}
-          </tr>
-        )}
-      </tbody>
-    </table>
+    <div>
+      <nav>
+        <button onClick={() => setPage("tournament")}>Tournament</button>
+        <button onClick={() => setPage("contenders")}>Contenders</button>
+      </nav>
+      {page === "tournament" ? (
+        <Tournament contenders={contenders} />
+      ) : (
+        <CustomContenders />
+      )}
+    </div>
   );
 }
-
-export default App;
