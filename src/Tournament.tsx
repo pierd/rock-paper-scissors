@@ -45,7 +45,10 @@ export function Tournament({
   );
 }
 
-function renderDuelResult(result: { [_ in Result]: number }) {
+function renderDuelResult(result: { [_ in Result]: number } | undefined) {
+  if (result === undefined) {
+    return "Error";
+  }
   const resultsSum = result.win + result.lose + result.draw;
   return (
     <PieChart

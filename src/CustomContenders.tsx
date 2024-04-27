@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "contenders";
 
-function loadContenders(): { [name: string]: string } {
+export function loadContenders(): { [name: string]: string } {
   const storedContenders = JSON.parse(
     localStorage.getItem(STORAGE_KEY) || "{}"
   );
@@ -36,22 +36,24 @@ function CustomContender({
   onSave: (name: string, code: string) => void;
   onDelete: () => void;
 }) {
+  console.log("CustomContender", name, code);
   const [nameVal, setNameVal] = useState(name);
   const [codeVal, setCodeVal] = useState(code);
+  console.log("CustomContender Vals", nameVal, codeVal);
   return (
     <>
       <input
         placeholder="Name"
         value={nameVal}
-        onChange={(event) => {
-          setNameVal(event.target.value);
+        onChange={(e) => {
+          setNameVal(e.target.value);
         }}
       />
       <textarea
         placeholder="Code"
         value={codeVal}
-        onChange={(event) => {
-          setCodeVal(event.target.value);
+        onChange={(e) => {
+          setCodeVal(e.target.value);
         }}
       />
       <button
@@ -67,25 +69,29 @@ function CustomContender({
 }
 
 export function CustomContenders() {
-  const storedContenders = loadContenders();
+  const [contenders, setContenders] = useState(loadContenders());
+  console.log("Contenders", contenders);
+  useEffect(() => {
+    saveContenders(contenders);
+  }, [contenders]);
+
   const [selectedContender, setSelectedContender] = useState<
     string | undefined
   >(undefined);
-  const contender =
-    selectedContender === undefined
-      ? { name: "", code: "" }
-      : {
-          name: selectedContender,
-          code: storedContenders[selectedContender],
-        };
-  const contenderNames = Object.keys(storedContenders);
+  const contenderNames = Object.keys(contenders);
   contenderNames.sort();
+
+  console.log("Selected contender", selectedContender);
+
   return (
     <>
       <h1>Contenders</h1>
-      <select value={selectedContender}>
+      <select
+        value={selectedContender}
+        onChange={(e) => setSelectedContender(e.target.value)}
+      >
         <option
-          value={undefined}
+          value={"My new contender"}
           onSelect={() => setSelectedContender(undefined)}
         >
           New...
@@ -101,18 +107,24 @@ export function CustomContenders() {
         ))}
       </select>
       <CustomContender
-        name={contender.name}
-        code={contender.code}
+        key={selectedContender}
+        name={selectedContender || ""}
+        code={contenders[selectedContender || ""] || ""}
         onSave={(name, code) => {
           console.log("Saving", name, code);
-          storedContenders[name] = code;
-          saveContenders(storedContenders);
+          const newContenders = { ...contenders };
+          newContenders[name] = code;
+          setContenders(newContenders);
           setSelectedContender(name);
         }}
         onDelete={() => {
-            console.log("Deleting", contender.name);
-          delete storedContenders[contender.name];
-          saveContenders(storedContenders);
+          console.log("Deleting", selectedContender);
+          if (!selectedContender) {
+            return;
+          }
+          const newContenders = { ...contenders };
+          delete newContenders[selectedContender];
+          setContenders(newContenders);
           setSelectedContender(undefined);
         }}
       />

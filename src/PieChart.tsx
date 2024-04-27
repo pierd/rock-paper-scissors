@@ -31,12 +31,3 @@ export function PieChart({ segments }: {segments: Segment[]}) {
         }
         </svg>;
 }
-
-// const segments: Segment[] = [
-//     { color: 'green', angle: 120 },
-//     { color: 'grey', angle: 120 },
-//     { color: 'red', angle: 120 }
-// ];
-
-// const svgPieChart = generatePieChart(segments);
-// console.log(svgPieChart);
