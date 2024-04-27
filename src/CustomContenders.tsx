@@ -36,10 +36,8 @@ function CustomContender({
   onSave: (name: string, code: string) => void;
   onDelete: () => void;
 }) {
-  console.log("CustomContender", name, code);
   const [nameVal, setNameVal] = useState(name);
   const [codeVal, setCodeVal] = useState(code);
-  console.log("CustomContender Vals", nameVal, codeVal);
   return (
     <>
       <input
@@ -70,7 +68,6 @@ function CustomContender({
 
 export function CustomContenders() {
   const [contenders, setContenders] = useState(loadContenders());
-  console.log("Contenders", contenders);
   useEffect(() => {
     saveContenders(contenders);
   }, [contenders]);
@@ -80,8 +77,6 @@ export function CustomContenders() {
   >(undefined);
   const contenderNames = Object.keys(contenders);
   contenderNames.sort();
-
-  console.log("Selected contender", selectedContender);
 
   return (
     <>
@@ -111,14 +106,12 @@ export function CustomContenders() {
         name={selectedContender || ""}
         code={contenders[selectedContender || ""] || ""}
         onSave={(name, code) => {
-          console.log("Saving", name, code);
           const newContenders = { ...contenders };
           newContenders[name] = code;
           setContenders(newContenders);
           setSelectedContender(name);
         }}
         onDelete={() => {
-          console.log("Deleting", selectedContender);
           if (!selectedContender) {
             return;
           }

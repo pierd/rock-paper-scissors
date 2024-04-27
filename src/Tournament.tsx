@@ -1,6 +1,5 @@
 import { Contender, duel } from "./Contender";
-import { PieChart } from "./PieChart";
-import { Result } from "./rules";
+import { ResultsPieChart } from "./ResultsPieChart";
 
 export function Tournament({
   contenders,
@@ -33,30 +32,18 @@ export function Tournament({
             <td>{contenderA.name}</td>
             {contendersList.map((contenderB) => (
               <td key={contenderB.id}>
-                {renderDuelResult(
-                  duel(contenderA.contender, contenderB.contender, 1000)
-                )}
+                <ResultsPieChart
+                  results={duel(
+                    contenderA.contender,
+                    contenderB.contender,
+                    1000
+                  )}
+                />
               </td>
             ))}
           </tr>
         ))}
       </tbody>
     </table>
-  );
-}
-
-function renderDuelResult(result: { [_ in Result]: number } | undefined) {
-  if (result === undefined) {
-    return "Error";
-  }
-  const resultsSum = result.win + result.lose + result.draw;
-  return (
-    <PieChart
-      segments={[
-        { color: "green", angle: (result.win / resultsSum) * 360 },
-        { color: "red", angle: (result.lose / resultsSum) * 360 },
-        { color: "grey", angle: (result.draw / resultsSum) * 360 },
-      ]}
-    />
   );
 }
